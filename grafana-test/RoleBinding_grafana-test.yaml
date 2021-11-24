@@ -1,8 +1,8 @@
-# Source: grafana/templates/role.yaml
+# Source: grafana/templates/tests/test-rolebinding.yaml
 apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
+kind: RoleBinding
 metadata:
-  name: grafana
+  name: grafana-test
   namespace: lma
   labels:
     helm.sh/chart: grafana-5.5.7
@@ -10,8 +10,11 @@ metadata:
     app.kubernetes.io/instance: grafana
     app.kubernetes.io/version: "7.1.1"
     app.kubernetes.io/managed-by: Helm
-rules:
-- apiGroups:      ['extensions']
-  resources:      ['podsecuritypolicies']
-  verbs:          ['use']
-  resourceNames:  [grafana]
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: grafana-test
+subjects:
+- kind: ServiceAccount
+  name: grafana-test
+  namespace: lma
